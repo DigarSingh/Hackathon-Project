@@ -28,10 +28,11 @@ const App = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/quizzes" element={<QuizList />} />
             <Route path="/quizzes/:id" element={<QuizDetail />} />
-            <Route path="/games" element={<GamesHub />} />
-            <Route path="/games/eco-trivia" element={<EcoTriviaGame />} />
-            <Route path="/games/carbon-reducer" element={<CarbonReducerGame />} />
-            <Route path="/games/waste-sorter" element={<WasteSorterGame />} />
+            <Route path="/games/*" element={<GamesHub />}>
+              <Route path="eco-trivia" element={<EcoTriviaGame />} />
+              <Route path="carbon-reducer" element={<CarbonReducerGame />} />
+              <Route path="waste-sorter" element={<WasteSorterGame />} />
+            </Route>
             <Route path="/rewards" element={<Rewards />} />
             <Route path="/eco-actions" element={<ActionsList />} />
             <Route path="/initiatives" element={<InitiativesList />} />

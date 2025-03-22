@@ -242,7 +242,7 @@ const EcoTriviaGame = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-green-50">
-        <div className="w-16 h-16 border-4 border-t-4 rounded-full border-green-400 border-t-green-200 animate-spin"></div>
+        <div className="w-16 h-16 border-4 border-t-4 border-green-400 rounded-full border-t-green-200 animate-spin"></div>
       </div>
     );
   }
@@ -259,17 +259,17 @@ const EcoTriviaGame = () => {
         >
           <h2 className="mb-4 text-3xl font-bold text-center text-green-600">Game Over!</h2>
           
-          <div className="p-6 mb-6 text-center bg-green-50 rounded-lg">
+          <div className="p-6 mb-6 text-center rounded-lg bg-green-50">
             <div className="mb-4 text-5xl font-bold text-green-600">{correctAnswers} / {questions.length}</div>
             <p className="text-lg text-gray-600">Correct Answers</p>
           </div>
           
           <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="p-4 text-center bg-blue-50 rounded-lg">
+            <div className="p-4 text-center rounded-lg bg-blue-50">
               <div className="mb-1 text-3xl font-bold text-blue-600">{Math.round((correctAnswers / questions.length) * 100)}%</div>
               <p className="text-sm text-gray-600">Accuracy</p>
             </div>
-            <div className="p-4 text-center bg-amber-50 rounded-lg">
+            <div className="p-4 text-center rounded-lg bg-amber-50">
               <div className="mb-1 text-3xl font-bold text-amber-600">{pointsAwarded || '-'}</div>
               <p className="text-sm text-gray-600">Points Earned</p>
             </div>
@@ -300,7 +300,7 @@ const EcoTriviaGame = () => {
                 setPointsAwarded(null);
                 setMessage('');
               }}
-              className="px-6 py-2 transition-colors bg-white border border-green-500 rounded-lg text-green-500 hover:bg-green-50"
+              className="px-6 py-2 text-green-500 transition-colors bg-white border border-green-500 rounded-lg hover:bg-green-50"
             >
               Play Again
             </button>
@@ -400,13 +400,13 @@ const EcoTriviaGame = () => {
         {/* Explanation */}
         {showExplanation && (
           <motion.div
-            className="w-full max-w-2xl p-5 mx-auto mb-6 bg-blue-50 rounded-lg shadow-md border border-blue-200"
+            className="w-full max-w-2xl p-5 mx-auto mb-6 border border-blue-200 rounded-lg shadow-md bg-blue-50"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             transition={{ duration: 0.3 }}
           >
             <div className="flex items-start">
-              <FaLightbulb className="mr-3 mt-1 text-amber-500" />
+              <FaLightbulb className="mt-1 mr-3 text-amber-500" />
               <div>
                 <h4 className="mb-1 text-lg font-medium text-gray-800">Explanation</h4>
                 <p className="text-gray-600">{currentQuestion.explanation}</p>

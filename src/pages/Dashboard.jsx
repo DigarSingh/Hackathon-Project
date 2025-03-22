@@ -1,6 +1,13 @@
 import React, { useState } from 'react';
-import { Bell, User, Settings, LogOut, Search, Menu, ChevronDown, Award, Home, Calendar, BarChart2, Users, HelpCircle, Leaf, Droplet, Wind, Sun, CheckCircle, Quote, Github, Linkedin, Twitter } from 'lucide-react';
+import { Bell, User, Settings, LogOut, Search, Menu, ChevronDown, Award, Home, Calendar, BarChart2, Users, HelpCircle, Leaf, Droplet, Wind, Sun, CheckCircle, Quote, Github, Linkedin, Twitter, MessageSquare, Send } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { useNavigate } from 'react-router-dom';
+import { FaGamepad, FaMedal, FaLeaf } from 'react-icons/fa';
+// Import new components
+import InitiativesList from './Initiatives/InitiativesList';
+import InitiativeDetail from './Initiatives/InitiativeDetail';
+// Import scrollbar styles
+import '../styles/scrollbar.css';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -9,6 +16,15 @@ const Dashboard = () => {
   const [showSurveyModal, setShowSurveyModal] = useState(false);
   const [showTreePlantedConfirmation, setShowTreePlantedConfirmation] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [selectedInitiative, setSelectedInitiative] = useState(null);
+  // New state for chatbot
+  const [showChatbot, setShowChatbot] = useState(false);
+  const [chatMessages, setChatMessages] = useState([
+    { sender: 'ai', text: 'Hello! I\'m your EcoAssistant. How can I help you with your sustainability journey today?' }
+  ]);
+  const [userMessage, setUserMessage] = useState('');
+  
+  const navigate = useNavigate();
   
   // Sample carbon footprint data
   const carbonData = [
@@ -22,8 +38,8 @@ const Dashboard = () => {
 
   // Sample user data
   const user = {
-    name: "Alex Johnson",
-    email: "alex.johnson@example.com",
+    name: "Rohit Sharma",
+    email: "rohitsharma2@gmail.com",
     avatar: "https://i.pravatar.cc/80?img=11", // Placeholder avatar
     score: 2750,
     level: 12,
@@ -35,7 +51,7 @@ const Dashboard = () => {
       { id: 3, type: "system", text: "New feature: Carbon footprint tracker", time: "2 days ago" }
     ],
     stats: [
-      { label: "Eco Points", value: 2750, icon: <Leaf size={20} className="text-green-600" /> },
+      { label: "Eco Points", value: 270, icon: <Leaf size={20} className="text-green-600" /> },
       { label: "Trees Planted", value: 24, icon: <Droplet size={20} className="text-green-600" /> },
       { label: "Eco Ranking", value: "#42", icon: <Award size={20} className="text-green-600" /> },
       { label: "Green Streak", value: "7 days", icon: <Wind size={20} className="text-green-600" /> }
@@ -87,6 +103,40 @@ const Dashboard = () => {
     { id: 3, name: "Morgan Lee", level: 13, points: 2900, avatar: "https://i.pravatar.cc/80?img=3" },
     { id: 4, name: "Alex Johnson", level: 12, points: 2750, avatar: "https://i.pravatar.cc/80?img=11", isCurrentUser: true },
     { id: 5, name: "Jordan Wilson", level: 10, points: 2400, avatar: "https://i.pravatar.cc/80?img=5" },
+  ];
+
+  // Games data
+  const gamesData = [
+    {
+      id: 'eco-trivia',
+      title: 'Eco-Trivia Challenge',
+      description: 'Test your environmental knowledge with this fun trivia game!',
+      imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&auto=format&fit=crop&w=1964&q=80',
+      maxPoints: 50,
+      difficulty: 'Medium',
+      estimatedTime: '5 min',
+      route: '/games/eco-trivia'
+    },
+    {
+      id: 'carbon-reducer',
+      title: 'Carbon Footprint Reducer',
+      description: 'Make choices to reduce your virtual carbon footprint in this simulation game.',
+      imageUrl: 'https://images.unsplash.com/photo-1615500025837-cf3e974bd4e0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      maxPoints: 50,
+      difficulty: 'Easy',
+      estimatedTime: '8 min',
+      route: '/games/carbon-reducer'
+    },
+    {
+      id: 'waste-sorter',
+      title: 'Waste Sorting Master',
+      description: 'Sort various items into the correct recycling bins as fast as you can!',
+      imageUrl: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80',
+      maxPoints: 50,
+      difficulty: 'Hard',
+      estimatedTime: '3 min',
+      route: '/games/waste-sorter'
+    }
   ];
 
   // Survey questions for eco actions
@@ -151,6 +201,47 @@ const Dashboard = () => {
 
   const handleNavClick = (tab) => {
     setActiveTab(tab);
+  };
+
+  // Chatbot functions
+  const toggleChatbot = () => {
+    setShowChatbot(!showChatbot);
+  };
+
+  const handleMessageChange = (e) => {
+    setUserMessage(e.target.value);
+  };
+
+  const sendMessage = (e) => {
+    e.preventDefault();
+    if (!userMessage.trim()) return;
+
+    // Add user message to chat
+    const updatedMessages = [
+      ...chatMessages, 
+      { sender: 'user', text: userMessage }
+    ];
+    setChatMessages(updatedMessages);
+    setUserMessage('');
+
+    // Simulate AI response
+    setTimeout(() => {
+      const aiResponses = [
+        "That's a great eco-friendly idea! Research shows it could reduce your carbon footprint by up to 15%.",
+        "Have you considered composting? It's a great way to reduce waste and create nutrient-rich soil for your garden.",
+        "Energy conservation tip: LED bulbs use up to 90% less energy than incandescent bulbs and last much longer.",
+        "Did you know? A single reusable water bottle can replace hundreds of single-use plastic bottles annually.",
+        "Great question! Reducing meat consumption by even one day per week can significantly lower your carbon footprint.",
+        "Water conservation is crucial. Consider installing low-flow faucets and showerheads to reduce water usage by up to 60%."
+      ];
+      
+      const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+      
+      setChatMessages([
+        ...updatedMessages,
+        { sender: 'ai', text: randomResponse }
+      ]);
+    }, 1000);
   };
 
   const renderContent = () => {
@@ -403,6 +494,98 @@ const Dashboard = () => {
           </div>
         );
         
+      case 'initiatives':
+        return selectedInitiative ? (
+          <div>
+            <button 
+              onClick={() => setSelectedInitiative(null)}
+              className="flex items-center mb-6 text-sm font-medium text-green-700 hover:text-green-800"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+              Back to Initiatives
+            </button>
+            <InitiativeDetail initiative={selectedInitiative} />
+          </div>
+        ) : (
+          <div>
+            <h1 className="mb-6 text-2xl font-bold text-gray-800">Community Initiatives</h1>
+            <InitiativesList 
+              onSelectInitiative={(initiative) => setSelectedInitiative(initiative)}
+            />
+          </div>
+        );
+        
+      case 'games':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-2xl font-bold text-gray-800">Eco Games</h1>
+              <button 
+                onClick={() => navigate('/games')}
+                className="px-4 py-2 text-white transition-colors bg-green-500 rounded-lg hover:bg-green-600"
+              >
+                View All Games
+              </button>
+            </div>
+            
+            <div className="p-4 mb-6 border border-green-300 rounded-lg bg-green-50">
+              <h3 className="mb-2 text-lg font-medium text-green-800">Why Play Eco Games?</h3>
+              <p className="text-green-700">
+                Our educational games help you learn about sustainability while earning eco-points. 
+                Complete challenges, test your knowledge, and make a positive impact on the environment!
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {gamesData.map(game => (
+                <div 
+                  key={game.id}
+                  onClick={() => navigate(game.route)}
+                  className="overflow-hidden transition-all bg-white rounded-lg shadow-md cursor-pointer hover:shadow-lg"
+                >
+                  <div className="relative h-40 overflow-hidden bg-gray-200">
+                    <img 
+                      src={game.imageUrl} 
+                      alt={game.title}
+                      className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                    />
+                    <div className="absolute top-3 right-3">
+                      <span className={`px-3 py-1 text-xs font-bold text-white rounded-full ${
+                        game.difficulty === 'Easy' ? 'bg-green-500' : 
+                        game.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'
+                      }`}>
+                        {game.difficulty}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="mb-2 text-lg font-bold text-gray-900">{game.title}</h3>
+                    <p className="mb-3 text-sm text-gray-600 line-clamp-2">{game.description}</p>
+                    <div className="flex items-center justify-between text-sm">
+                      <div className="flex items-center text-amber-600">
+                        <FaMedal className="mr-1" />
+                        <span>Up to {game.maxPoints} points</span>
+                      </div>
+                      <span className="text-gray-500">{game.estimatedTime}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex justify-center mt-6">
+              <div className="inline-flex p-1 bg-white rounded-lg shadow">
+                <div className="flex items-center px-4 py-2 text-sm font-medium text-gray-600">
+                  <FaLeaf className="mr-2 text-green-500" />
+                  Total Eco-Points Earned from Games: 220
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      
       default:
         return (
           <>
@@ -646,6 +829,30 @@ const Dashboard = () => {
                   {isSidebarOpen && <span className="ml-3">Community</span>}
                 </a>
               </li>
+              {/* New Initiative navigation item */}
+              <li className="mb-2">
+                <a 
+                  href="#" 
+                  className={`flex items-center p-3 mx-2 text-white rounded-lg ${activeTab === 'initiatives' ? 'bg-green-900' : 'hover:bg-green-700'}`}
+                  onClick={() => handleNavClick('initiatives')}
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                  </svg>
+                  {isSidebarOpen && <span className="ml-3">Initiatives</span>}
+                </a>
+              </li>
+              {/* Games navigation item */}
+              <li className="mb-2">
+                <a 
+                  href="#" 
+                  className={`flex items-center p-3 mx-2 text-white rounded-lg ${activeTab === 'games' ? 'bg-green-900' : 'hover:bg-green-700'}`}
+                  onClick={() => handleNavClick('games')}
+                >
+                  <FaGamepad size={20} />
+                  {isSidebarOpen && <span className="ml-3">Games</span>}
+                </a>
+              </li>
             </ul>
           </nav>
           
@@ -770,30 +977,98 @@ const Dashboard = () => {
       </div>
 
       {/* Footer */}
-      <footer className="py-4 bg-white border-t border-gray-200">
-        <div className="container px-6 mx-auto">
-          <div className="flex flex-col items-center justify-between md:flex-row">
-            <div className="flex items-center mb-4 md:mb-0">
-              <div className="flex items-center justify-center w-8 h-8 mr-2 text-white bg-green-600 rounded-md">
-                <Leaf size={16} />
+      <footer className="py-4 bg-white border-t border-gray-200 sm:py-6">
+        <div className="container px-4 mx-auto sm:px-6">
+          <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Brand and copyright */}
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-center">
+                <div className="flex items-center justify-center w-8 h-8 mr-2 text-white bg-green-600 rounded-md">
+                  <Leaf size={16} />
+                </div>
+                <span className="text-lg font-bold text-green-800">GreenWaves</span>
               </div>
-              <span className="text-lg font-bold text-green-800">GreenWaves</span>
-              <span className="ml-2 text-sm text-gray-500">© 2025 All rights reserved</span>
+              <p className="text-sm text-gray-500">
+                Making sustainability accessible through technology.
+                <br />© 2025 GreenWaves. All rights reserved.
+              </p>
+              <div className="flex space-x-4">
+                <a href="#" className="text-gray-400 transition-colors hover:text-green-600">
+                  <Github size={20} />
+                </a>
+                <a href="#" className="text-gray-400 transition-colors hover:text-green-600">
+                  <Linkedin size={20} />
+                </a>
+                <a href="#" className="text-gray-400 transition-colors hover:text-green-600">
+                  <Twitter size={20} />
+                </a>
+              </div>
             </div>
             
-            <div className="flex items-center space-x-4">
-              
-              <div className="flex space-x-3">
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <Github size={18} />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <Linkedin size={18} />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-gray-600">
-                  <Twitter size={18} />
-                </a>
+            {/* Resources */}
+            <div className="pt-2 sm:pt-0">
+              <h3 className="mb-3 text-sm font-semibold text-gray-800 uppercase sm:mb-4">Resources</h3>
+              <div className="pr-2 overflow-y-auto max-h-36 custom-scrollbar">
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Blog</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Sustainability Guide</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Carbon Calculator</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">FAQs</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Community Events</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Eco-Friendly Products</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Research Papers</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Video Tutorials</a></li>
+                </ul>
               </div>
+            </div>
+            
+            {/* Company */}
+            <div className="pt-2 sm:pt-0">
+              <h3 className="mb-3 text-sm font-semibold text-gray-800 uppercase sm:mb-4">Company</h3>
+              <div className="pr-2 overflow-y-auto max-h-36 custom-scrollbar">
+                <ul className="space-y-2">
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">About Us</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Our Team</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Partners</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Contact</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Careers</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Press Kit</a></li>
+                  <li><a href="#" className="text-gray-500 hover:text-green-600">Investors</a></li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* Newsletter */}
+            <div className="pt-2 sm:pt-0">
+              <h3 className="mb-3 text-sm font-semibold text-gray-800 uppercase sm:mb-4">Stay Updated</h3>
+              <p className="mb-3 text-sm text-gray-500 sm:mb-4">Subscribe to our newsletter for tips and updates on sustainability.</p>
+              <form className="flex flex-col sm:flex-row">
+                <input 
+                  type="email" 
+                  placeholder="Your email" 
+                  className="w-full px-3 py-2 mb-2 border border-gray-300 rounded sm:mb-0 sm:rounded-r-none focus:outline-none focus:ring-1 focus:ring-green-500"
+                />
+                <button 
+                  type="submit" 
+                  className="w-full px-4 py-2 text-white bg-green-600 rounded sm:w-auto sm:rounded-l-none hover:bg-green-700"
+                >
+                  Sign Up
+                </button>
+              </form>
+            </div>
+          </div>
+          
+          {/* Bottom links */}
+          <div className="pt-6 mt-6 border-t border-gray-200 sm:pt-8 sm:mt-8">
+            <div className="flex flex-col items-center justify-between space-y-4 md:flex-row md:space-y-0">
+              <div className="flex flex-col space-y-2 text-center sm:flex-row sm:space-y-0 sm:space-x-4 sm:text-left">
+                <a href="#" className="text-sm text-gray-500 hover:text-green-600">Privacy Policy</a>
+                <span className="hidden text-gray-500 sm:inline">•</span>
+                <a href="#" className="text-sm text-gray-500 hover:text-green-600">Terms of Service</a>
+                <span className="hidden text-gray-500 sm:inline">•</span>
+                <a href="#" className="text-sm text-gray-500 hover:text-green-600">Cookie Policy</a>
+              </div>
+              <p className="text-sm text-gray-500">Made with 💚 for a greener planet</p>
             </div>
           </div>
         </div>
@@ -861,6 +1136,73 @@ const Dashboard = () => {
             <p className="font-medium">Virtual Tree Planted!</p>
             <p className="text-sm">+50 Eco Points added to your account</p>
           </div>
+        </div>
+      )}
+      
+      {/* Chatbot Toggle Button */}
+      <button 
+        onClick={toggleChatbot}
+        className="fixed z-40 flex items-center justify-center p-3 text-white bg-green-600 rounded-full shadow-lg bottom-6 right-6 hover:bg-green-700"
+        aria-label="Chat with EcoAssistant"
+      >
+        <MessageSquare size={24} />
+      </button>
+      
+      {/* Chatbot Window */}
+      {showChatbot && (
+        <div className="fixed z-50 flex flex-col bg-white border border-gray-200 rounded-lg shadow-xl w-80 h-96 bottom-20 right-6">
+          {/* Chat Header */}
+          <div className="flex items-center justify-between p-3 text-white bg-green-600 border-b border-gray-200 rounded-t-lg">
+            <div className="flex items-center">
+              <Leaf size={18} className="mr-2" />
+              <h3 className="font-medium">EcoAssistant</h3>
+            </div>
+            <button 
+              onClick={toggleChatbot}
+              className="p-1 text-white rounded hover:bg-green-700"
+            >
+              ✕
+            </button>
+          </div>
+          
+          {/* Chat Messages */}
+          <div className="flex-1 p-3 overflow-y-auto">
+            <div className="space-y-3">
+              {chatMessages.map((msg, index) => (
+                <div 
+                  key={index} 
+                  className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div 
+                    className={`max-w-3/4 p-3 rounded-lg ${
+                      msg.sender === 'user' 
+                        ? 'bg-green-600 text-white' 
+                        : 'bg-gray-200 text-gray-800'
+                    }`}
+                  >
+                    <p className="text-sm">{msg.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          {/* Chat Input */}
+          <form onSubmit={sendMessage} className="flex items-center p-3 border-t border-gray-200">
+            <input
+              type="text"
+              value={userMessage}
+              onChange={handleMessageChange}
+              placeholder="Ask about sustainability..."
+              className="flex-1 px-3 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-1 focus:ring-green-500"
+            />
+            <button
+              type="submit"
+              className="px-3 py-2 text-white bg-green-600 rounded-r-lg hover:bg-green-700"
+            >
+              <Send size={18} />
+            </button>
+          </form>
         </div>
       )}
     </div>

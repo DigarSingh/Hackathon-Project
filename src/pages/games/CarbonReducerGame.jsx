@@ -66,14 +66,13 @@ const CarbonReducerGame = () => {
         id: 3, 
         category: 'food',
         title: 'What will you eat for lunch today?',
-// Around line 70 in the game options
-options: [
-    { text: 'Turn the thermostat up to 75°F (24°C)', carbon: 15, impact: 'high' },
-    { text: 'Set thermostat to 68°F (20°C)', carbon: 8, impact: 'medium' },
-    { text: 'Put on a sweater and keep thermostat at 65°F (18°C)', carbon: 5, impact: 'low' },
-    { text: 'Use only spot heating in the room you\'re in', carbon: 3, impact: 'very-low' }
-  ],
-          fact: 'Beef production creates about 60kg of greenhouse gas emissions per kg of meat, while vegetables produce only 2-3kg for the same amount.'
+        options: [
+          { text: 'Beef burger with fries', carbon: 15, impact: 'high' },
+          { text: 'Chicken sandwich', carbon: 8, impact: 'medium' },
+          { text: 'Vegetarian pasta dish', carbon: 5, impact: 'low' },
+          { text: 'Local, seasonal salad with plant-based protein', carbon: 2, impact: 'very-low' }
+        ],
+        fact: 'Beef production creates about 60kg of greenhouse gas emissions per kg of meat, while vegetables produce only 2-3kg for the same amount.'
       },
       { 
         id: 4, 

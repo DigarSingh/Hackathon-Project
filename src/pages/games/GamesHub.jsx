@@ -73,6 +73,16 @@ const GamesHub = () => {
     fetchGames();
   }, []);
   
+  // Game-specific image map
+  const gameImages = {
+    'eco-trivia': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1964&q=80', // Nature quiz image
+    'carbon-reducer': 'https://images.unsplash.com/photo-1615500025837-cf3e974bd4e0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80', // Carbon footprint image
+    'waste-sorter': 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80', // Recycling/waste image
+  };
+  
+  // Default fallback image if game ID doesn't match or image fails to load
+  const defaultGameImage = 'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2913&q=80';
+  
   // Add a safety check before mapping
   const renderGames = () => {
     if (!Array.isArray(games)) {
@@ -92,12 +102,33 @@ const GamesHub = () => {
               whileHover={{ y: -5, scale: 1.02 }}
               transition={{ duration: 0.2 }}
             >
-              <div className="h-48 overflow-hidden bg-gray-200">
+              <div className="relative h-48 overflow-hidden bg-gray-200">
+                {/* Game card image with game-specific images */}
                 <img 
-                  src={game.imageUrl || `https://d1c337161ud3pr.cloudfront.net/bluedot/2016/07/Gaming-for-Peace_Big-2.jpg`} 
+                  src={game.imageUrl || gameImages[game.id] || defaultGameImage} 
                   alt={game.title}
-                  className="object-cover w-full h-full"
+                  className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
+                  onError={(e) => {
+                    e.target.onerror = null; 
+                    e.target.src = defaultGameImage;
+                  }}
+                  loading="lazy"
                 />
+                {/* Game difficulty badge */}
+                <div className="absolute top-3 right-3">
+                  <span className={`px-3 py-1 text-xs font-bold text-white rounded-full ${
+                    game.difficulty === 'Easy' ? 'bg-green-500' : 
+                    game.difficulty === 'Medium' ? 'bg-yellow-500' : 'bg-red-500'
+                  }`}>
+                    {game.difficulty}
+                  </span>
+                </div>
+                {/* Play overlay on hover */}
+                <div className="absolute inset-0 flex items-center justify-center transition-opacity duration-300 bg-black bg-opacity-50 opacity-0 hover:opacity-100">
+                  <span className="px-4 py-2 text-white bg-green-600 rounded-full">
+                    Play Now
+                  </span>
+                </div>
               </div>
               <div className="p-5">
                 <h3 className="mb-2 text-xl font-bold text-gray-900">{game.title}</h3>
