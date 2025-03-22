@@ -1,6 +1,6 @@
-# EcoImpact Frontend
+# Green Waves Frontend
 
-Welcome to the EcoImpact frontend project! This application is designed to promote eco-friendly actions and initiatives through quizzes, rewards, and community engagement.
+Welcome to the Green Waves frontend project! This application is designed to promote eco-friendly actions and initiatives through quizzes, rewards, and community engagement.
 
 ## Project Structure
 
@@ -80,12 +80,12 @@ eco-impact-frontend
 
 ## Getting Started
 
-To get started with the EcoImpact frontend project, follow these steps:
+To get started with the Green Waves frontend project, follow these steps:
 
 1. **Clone the repository**:
    ```
-   git clone <repository-url>
-   cd eco-impact-frontend
+   git clone https://github.com/DigarSingh/web
+   cd Green-Waves-frontend
    ```
 
 2. **Install dependencies**:
