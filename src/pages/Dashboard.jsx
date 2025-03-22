@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Bell, User, Settings, LogOut, Search, Menu, ChevronDown, Award, Home, Calendar, BarChart2, Users, HelpCircle, Leaf, Droplet, Wind, Sun, CheckCircle, Quote, Github, Linkedin, Twitter, MessageSquare, Send } from 'lucide-react';
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useNavigate } from 'react-router-dom';
@@ -23,6 +23,8 @@ const Dashboard = () => {
     { sender: 'ai', text: 'Hello! I\'m your EcoAssistant. How can I help you with your sustainability journey today?' }
   ]);
   const [userMessage, setUserMessage] = useState('');
+  const [showFooter, setShowFooter] = useState(false);
+  const mainContentRef = useRef(null);
   
   const navigate = useNavigate();
   
@@ -243,6 +245,32 @@ const Dashboard = () => {
       ]);
     }, 1000);
   };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!mainContentRef.current) return;
+      
+      const { scrollTop, scrollHeight, clientHeight } = mainContentRef.current;
+      
+      // Show footer when scrolled near bottom (within 100px of bottom)
+      if (scrollHeight - scrollTop - clientHeight < 100) {
+        setShowFooter(true);
+      } else {
+        setShowFooter(false);
+      }
+    };
+    
+    const contentElement = mainContentRef.current;
+    if (contentElement) {
+      contentElement.addEventListener('scroll', handleScroll);
+    }
+    
+    return () => {
+      if (contentElement) {
+        contentElement.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, []);
 
   const renderContent = () => {
     switch(activeTab) {
@@ -970,14 +998,21 @@ const Dashboard = () => {
           </header>
           
           {/* Dashboard Content */}
-          <main className="flex-1 p-6 overflow-y-auto">
+          <main 
+            ref={mainContentRef} 
+            className="flex-1 p-6 overflow-y-auto"
+          >
             {renderContent()}
           </main>
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="py-4 bg-white border-t border-gray-200 sm:py-6">
+      {/* Footer - now conditionally shown based on scroll position */}
+      <footer 
+        className={`py-4 bg-white border-t border-gray-200 sm:py-6 transition-all duration-300 ${
+          showFooter ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-full pointer-events-none'
+        } fixed bottom-0 left-0 right-0 z-10`}
+      >
         <div className="container px-4 mx-auto sm:px-6">
           <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {/* Brand and copyright */}
@@ -1142,7 +1177,9 @@ const Dashboard = () => {
       {/* Chatbot Toggle Button */}
       <button 
         onClick={toggleChatbot}
-        className="fixed z-40 flex items-center justify-center p-3 text-white bg-green-600 rounded-full shadow-lg bottom-6 right-6 hover:bg-green-700"
+        className={`fixed z-40 flex items-center justify-center p-3 text-white bg-green-600 rounded-full shadow-lg right-6 hover:bg-green-700 transition-all duration-300 ${
+          showFooter ? 'bottom-20' : 'bottom-6'
+        }`}
         aria-label="Chat with EcoAssistant"
       >
         <MessageSquare size={24} />
@@ -1150,7 +1187,9 @@ const Dashboard = () => {
       
       {/* Chatbot Window */}
       {showChatbot && (
-        <div className="fixed z-50 flex flex-col bg-white border border-gray-200 rounded-lg shadow-xl w-80 h-96 bottom-20 right-6">
+        <div className={`fixed z-50 flex flex-col bg-white border border-gray-200 rounded-lg shadow-xl w-80 h-96 right-6 transition-all duration-300 ${
+          showFooter ? 'bottom-32' : 'bottom-20'
+        }`}>
           {/* Chat Header */}
           <div className="flex items-center justify-between p-3 text-white bg-green-600 border-b border-gray-200 rounded-t-lg">
             <div className="flex items-center">
